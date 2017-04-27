@@ -33,14 +33,16 @@
     [self.contentView addSubview:_imageView];
     
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    label.backgroundColor = [UIColor redColor];
-    [self.contentView addSubview:label];
+    _address_label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 20)];
+    _address_label.backgroundColor = [UIColor redColor];
+    [self.contentView addSubview:_address_label];
 }
 
 - (void)loadCarouselData:(id)data
 {
     [_imageView sd_setImageWithURL:[NSURL URLWithString:[(NSDictionary *)data objectForKey:@"image"]]];
+    _address_label.text = [(NSDictionary *)data objectForKey:@"image"];
+    
 }
 
 @end

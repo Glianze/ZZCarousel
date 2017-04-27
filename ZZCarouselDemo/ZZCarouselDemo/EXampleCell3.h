@@ -10,6 +10,7 @@
 
 @interface EXampleCell3 : UICollectionViewCell
 @property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UILabel *address_label;
 
 - (void)loadCarouselData:(id)data;
 
