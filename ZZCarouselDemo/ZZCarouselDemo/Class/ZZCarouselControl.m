@@ -8,15 +8,15 @@
 
 #import "ZZCarouselControl.h"
 
-#define ZW self.frame.size.width
-#define ZH self.frame.size.height
+#define THIS_WIDTH self.frame.size.width
+#define THIS_HEIGHT self.frame.size.height
 
 @interface ZZCarouselControl()<UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 
-@property (strong, nonatomic) UICollectionView *coreView;
-@property (strong, nonatomic) UIPageControl *pageControl;
-@property (strong, nonatomic) UIImageView *backgroundView;
-@property (strong, nonatomic) NSTimer *timer;
+@property (nonatomic, strong) UICollectionView *coreView;
+@property (nonatomic, strong) UIPageControl *pageControl;
+@property (nonatomic, strong) UIImageView *backgroundView;
+@property (nonatomic, weak) NSTimer *timer;
 
 @property (nonatomic,   copy) void(^carouselBlock)(NSInteger index);
 @end
@@ -42,7 +42,7 @@
 
 - (void) makeCoreUI:(CGRect)frame
 {
-    _backgroundView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, ZW, ZH)];
+    _backgroundView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, THIS_WIDTH, THIS_HEIGHT)];
     _backgroundView.layer.masksToBounds = YES;
     _backgroundView.layer.borderWidth = 0;
     _backgroundView.contentMode = UIViewContentModeScaleToFill;
@@ -50,11 +50,11 @@
     
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc]init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    flowLayout.itemSize = CGSizeMake(ZW, ZH);
+    flowLayout.itemSize = CGSizeMake(THIS_WIDTH, THIS_HEIGHT);
     flowLayout.minimumLineSpacing = 0;
     flowLayout.minimumInteritemSpacing = 0;
     
-    self.coreView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, ZW, ZH) collectionViewLayout:flowLayout];
+    self.coreView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, THIS_WIDTH, THIS_HEIGHT) collectionViewLayout:flowLayout];
     self.coreView.showsHorizontalScrollIndicator = NO;
     self.coreView.dataSource = self;
     self.coreView.delegate = self;
@@ -68,7 +68,7 @@
 
 - (void) makePageUI:(CGRect)frame
 {
-    _pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(0, ZH - 20, ZW, 20)];
+    _pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(0, THIS_HEIGHT - 20, THIS_WIDTH, 20)];
     _pageControl.backgroundColor = [UIColor clearColor];
     _pageControl.currentPageIndicatorTintColor = [UIColor grayColor];
     _pageControl.pageIndicatorTintColor = [UIColor whiteColor];
@@ -153,19 +153,20 @@
 #pragma mark ```create timer start scroll```
 - (void)createTimer
 {
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:_autoScrollTimeInterval target:self selector:@selector(autoCarouselScroll) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:_autoScrollTimeInterval target:self selector:@selector(autoCarouselScroll) userInfo:nil repeats:YES];
+    self.timer = timer;
+    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
 }
 
 - (void)autoCarouselScroll
 {
     CGFloat offsetX;
-    NSInteger result = (NSInteger)self.coreView.contentOffset.x % (int)ZW;
-    NSInteger positionNum = (NSInteger)self.coreView.contentOffset.x / (int)ZW;
+    NSInteger result = (NSInteger)self.coreView.contentOffset.x % (NSInteger)THIS_WIDTH;
+    NSInteger positionNum = (NSInteger)self.coreView.contentOffset.x / (NSInteger)THIS_WIDTH;
     if (result != 0) {
-        offsetX = ZW * positionNum + ZW;
+        offsetX = THIS_WIDTH * positionNum + THIS_WIDTH;
     } else {
-        offsetX = self.coreView.contentOffset.x + ZW;
+        offsetX = self.coreView.contentOffset.x + THIS_WIDTH;
     }
     CGPoint offset = CGPointMake(offsetX, 0);
     [self.coreView setContentOffset:offset animated:YES];
@@ -215,18 +216,18 @@
 #pragma mark ```scrollview core delegate```
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    NSInteger page = (self.coreView.contentOffset.x + ZW * 0.5) / ZW - 1;
+    NSInteger page = (scrollView.contentOffset.x + THIS_WIDTH * 0.5) / THIS_WIDTH - 1;
     self.pageControl.currentPage = page;
-    if (self.coreView.contentOffset.x > ZW * (_carouselData.count - 1.5)) {
+    if (scrollView.contentOffset.x > THIS_WIDTH * (_carouselData.count - 2)) {
         self.pageControl.currentPage = 0;
-    } else if (self.coreView.contentOffset.x < ZW * 0.5) {
+    } else if (self.coreView.contentOffset.x < THIS_WIDTH * 0.5) {
         self.pageControl.currentPage = _carouselData.count - 3;
     }
     
-    if (self.coreView.contentOffset.x <= 0) {
-        self.coreView.contentOffset = CGPointMake(ZW * (_carouselData.count - 2), 0);
-    } else if (self.coreView.contentOffset.x >= ZW * (_carouselData.count - 1)) {
-        self.coreView.contentOffset = CGPointMake(ZW, 0);
+    if (scrollView.contentOffset.x <= 0) {
+        scrollView.contentOffset = CGPointMake(THIS_WIDTH * (_carouselData.count - 2), 0);
+    } else if (scrollView.contentOffset.x >= THIS_WIDTH * (_carouselData.count - 1)) {
+        scrollView.contentOffset = CGPointMake(THIS_WIDTH, 0);
     }
 }
 
@@ -241,6 +242,18 @@
     if (_autoScrollTimeInterval != 0){
         [self createTimer];
     }
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview
+{
+    if (!newSuperview) {
+        [_timer invalidate];
+    }
+}
+
+- (void)dealloc
+{
+    _timer = nil;
 }
 
 @end

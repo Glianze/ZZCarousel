@@ -14,10 +14,11 @@
  */
 @protocol ZZCarouselDelegate <NSObject>
 
-@optional
+@required
 
 - (void)carouselForItemCell:(id)cell carouselIndexItem:(id)item;
 
+@optional
 - (void)didSelectCarouselItemAtIndex:(NSInteger)index;
 
 @end
