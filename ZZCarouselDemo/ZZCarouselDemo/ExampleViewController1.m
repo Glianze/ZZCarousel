@@ -35,6 +35,7 @@
     carouselView.cellClass = [EXampleCell1 class];
     
     carouselView.autoScrollTimeInterval = 2.0f;
+    carouselView.scrollDirection = ZZCarouselScrollDirectionRight;
     carouselView.placeholderImage = [UIImage imageNamed:@"placeholder"];
     carouselView.delegate = self;
     

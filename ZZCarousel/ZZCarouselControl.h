@@ -29,6 +29,11 @@ typedef NS_ENUM(NSInteger, ZZCarouselPageAlignment) {
     ZZCarouselPageAlignmentCenter,
 };
 
+typedef NS_ENUM(NSInteger, ZZCarouselScrollDirection) {
+    ZZCarouselScrollDirectionLeft = 0,
+    ZZCarouselScrollDirectionRight,
+};
+
 /**
  The ZZCarouselControl core class.
  Using UICollectionView realized the real infinite carousel.
@@ -47,6 +52,8 @@ typedef NS_ENUM(NSInteger, ZZCarouselPageAlignment) {
 @property (nonatomic, strong) UIColor *currentPageColor;
 
 @property (nonatomic, assign) ZZCarouselPageAlignment pageAlignment;
+
+@property (nonatomic, assign) ZZCarouselScrollDirection scrollDirection;
 
 @property (nonatomic, strong) Class cellClass;
 

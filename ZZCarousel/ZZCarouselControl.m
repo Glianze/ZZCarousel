@@ -38,6 +38,7 @@
 - (void)instance
 {
     _autoScrollTimeInterval = 0;
+    _scrollDirection = ZZCarouselScrollDirectionLeft;
 }
 
 - (void) makeCoreUI:(CGRect)frame
@@ -61,8 +62,6 @@
     self.coreView.backgroundColor = [UIColor clearColor];
     self.coreView.pagingEnabled = YES;
     self.coreView.contentOffset = CGPointMake(self.bounds.size.width, 0);
-    
-    
     [self addSubview:self.coreView];
 }
 
@@ -119,6 +118,11 @@
     [self settingPageAlignment];
 }
 
+- (void)setScrollDirection:(ZZCarouselScrollDirection)scrollDirection
+{
+    _scrollDirection = scrollDirection;
+}
+
 - (void)settingPageAlignment
 {
     CGSize pointSize = [_pageControl sizeForNumberOfPages:_carouselData.count];
@@ -160,13 +164,17 @@
 
 - (void)autoCarouselScroll
 {
-    CGFloat offsetX;
+    CGFloat offsetX = 0.f;
     NSInteger result = (NSInteger)self.coreView.contentOffset.x % (NSInteger)THIS_WIDTH;
     NSInteger positionNum = (NSInteger)self.coreView.contentOffset.x / (NSInteger)THIS_WIDTH;
     if (result != 0) {
         offsetX = THIS_WIDTH * positionNum + THIS_WIDTH;
     } else {
-        offsetX = self.coreView.contentOffset.x + THIS_WIDTH;
+        if (_scrollDirection == ZZCarouselScrollDirectionLeft) {
+            offsetX = self.coreView.contentOffset.x + THIS_WIDTH;
+        } else if (_scrollDirection == ZZCarouselScrollDirectionRight) {
+            offsetX = self.coreView.contentOffset.x - THIS_WIDTH;
+        }
     }
     CGPoint offset = CGPointMake(offsetX, 0);
     [self.coreView setContentOffset:offset animated:YES];
