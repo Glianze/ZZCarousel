@@ -23,6 +23,8 @@
 @property (nonatomic, strong) UIColor *currentPageColor;
 // UIPageControl 对齐方式 ， 枚举类型
 @property (nonatomic, assign) ZZCarouselPageAlignment pageAlignment;
+// 滚动方向
+@property (nonatomic, assign) ZZCarouselScrollDirection scrollDirection;
 // 设置轮播器自定义Cell
 @property (nonatomic, strong) Class cellClass;
 ```
