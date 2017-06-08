@@ -224,11 +224,11 @@
 #pragma mark ```scrollview core delegate```
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    NSInteger page = (scrollView.contentOffset.x + THIS_WIDTH * 0.5) / THIS_WIDTH - 1;
+    NSInteger page = scrollView.contentOffset.x / THIS_WIDTH - 1;
     self.pageControl.currentPage = page;
     if (scrollView.contentOffset.x > THIS_WIDTH * (_carouselData.count - 2)) {
         self.pageControl.currentPage = 0;
-    } else if (self.coreView.contentOffset.x < THIS_WIDTH * 0.5) {
+    } else if (self.coreView.contentOffset.x < 0) {
         self.pageControl.currentPage = _carouselData.count - 3;
     }
     
