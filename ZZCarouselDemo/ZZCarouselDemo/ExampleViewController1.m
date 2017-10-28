@@ -38,7 +38,7 @@
     carouselView.scrollDirection = ZZCarouselScrollDirectionRight;
     carouselView.placeholderImage = [UIImage imageNamed:@"placeholder"];
     carouselView.delegate = self;
-    
+    carouselView.currentPageColor = [UIColor orangeColor];
     
     [self.view addSubview:carouselView];
 

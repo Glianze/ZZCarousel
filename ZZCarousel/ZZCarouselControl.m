@@ -154,6 +154,16 @@
     }
 }
 
+- (void)setCurrentPageColor:(UIColor *)currentPageColor
+{
+    _pageControl.currentPageIndicatorTintColor = currentPageColor;
+}
+
+- (void)setDefaultPageColor:(UIColor *)defaultPageColor
+{
+    _pageControl.pageIndicatorTintColor = defaultPageColor;
+}
+
 #pragma mark ```create timer start scroll```
 - (void)createTimer
 {
