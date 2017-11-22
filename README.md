@@ -56,7 +56,7 @@ carouselView.delegate = self;
 ### 安装方法
 
 * 手动安装：拖拽ZZCarousel文件夹到工程内即可
-* 自动安装：pod 'ZZCarousel', '~> 1.0.3'
+* 自动安装：pod 'ZZCarousel', '~> 1.0.4'
 
 
 
