@@ -167,6 +167,7 @@
 #pragma mark ```create timer start scroll```
 - (void)createTimer
 {
+    [self invalidateTimer];
     NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:_autoScrollTimeInterval target:self selector:@selector(autoCarouselScroll) userInfo:nil repeats:YES];
     self.timer = timer;
     [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
@@ -250,10 +251,15 @@
     }
 }
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+- (void)invalidateTimer
 {
     [_timer invalidate];
     _timer = nil;
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [self invalidateTimer];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -266,8 +272,18 @@
 - (void)willMoveToSuperview:(UIView *)newSuperview
 {
     if (!newSuperview) {
-        [_timer invalidate];
+        [self invalidateTimer];
     }
+}
+
+- (void)stopAutoScroll
+{
+    [self invalidateTimer];
+}
+
+- (void)startAutoScroll
+{
+    [self createTimer];
 }
 
 - (void)dealloc

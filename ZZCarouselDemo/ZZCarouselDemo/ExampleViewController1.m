@@ -14,6 +14,8 @@
 
 @property (strong, nonatomic) NSArray *array;
 
+@property (strong, nonatomic) ZZCarouselControl *carouselView;
+
 @end
 
 @implementation ExampleViewController1
@@ -27,22 +29,36 @@
     _array = @[[UIImage imageNamed:@"zz1.jpg"],[UIImage imageNamed:@"zz2.jpg"],[UIImage imageNamed:@"zz3.jpg"],[UIImage imageNamed:@"zz4.jpg"],[UIImage imageNamed:@"zz5.jpg"]];
     
 
-    ZZCarouselControl *carouselView = [[ZZCarouselControl alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height / 3)];
+    _carouselView = [[ZZCarouselControl alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height / 3)];
 
-    carouselView.pageAlignment = ZZCarouselPageAlignmentRight;
+    _carouselView.pageAlignment = ZZCarouselPageAlignmentRight;
     
-    carouselView.carouselData = _array;
-    carouselView.cellClass = [EXampleCell1 class];
+    _carouselView.carouselData = _array;
+    _carouselView.cellClass = [EXampleCell1 class];
     
-    carouselView.autoScrollTimeInterval = 2.0f;
-    carouselView.scrollDirection = ZZCarouselScrollDirectionRight;
-    carouselView.placeholderImage = [UIImage imageNamed:@"placeholder"];
-    carouselView.delegate = self;
-    carouselView.currentPageColor = [UIColor orangeColor];
+    _carouselView.autoScrollTimeInterval = 2.0f;
+    _carouselView.scrollDirection = ZZCarouselScrollDirectionLeft;
+    _carouselView.placeholderImage = [UIImage imageNamed:@"placeholder"];
+    _carouselView.delegate = self;
+    _carouselView.currentPageColor = [UIColor orangeColor];
     
-    [self.view addSubview:carouselView];
+    [self.view addSubview:_carouselView];
 
 }
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [_carouselView stopAutoScroll];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [_carouselView startAutoScroll];
+}
+
 
 - (void)carouselForItemCell:(id)cell carouselIndexItem:(id)item
 {

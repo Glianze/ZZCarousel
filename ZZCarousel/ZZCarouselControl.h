@@ -61,5 +61,9 @@ typedef NS_ENUM(NSInteger, ZZCarouselScrollDirection) {
 
 - (void)carouselDidSelectIndexBlock:(void(^)(NSInteger index))carouselBlock;
 
+- (void)stopAutoScroll;
+
+- (void)startAutoScroll;
+
 @end
 
